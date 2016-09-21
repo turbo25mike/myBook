@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>c1cf338d-8803-40a8-99af-5ff6d9ce7e59</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>DrawIt</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)App.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Constants.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\ToolType.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Pages\StoryBoardEditor.xaml.cs">
+      <DependentUpon>StoryBoardEditor.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Pages\StoryManager.xaml.cs">
+      <DependentUpon>StoryManager.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Components\Story.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Components\ImageLayer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Components\ImageWithTouch.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Components\StoryBoard.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utilities\Converters.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utilities\ToolManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utilities\ViewModelBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\StoryBoardEditorViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\StoryManagerViewModel.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Pages\StoryBoardEditor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Pages\StoryManager.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+  </ItemGroup>
+</Project>

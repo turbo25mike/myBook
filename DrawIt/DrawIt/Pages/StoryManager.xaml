@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             
+             x:Class="DrawIt.StoryManager" >
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="*" />
+      <RowDefinition Height="50" />
+    </Grid.RowDefinitions>
+    <ListView x:Name="StoryList" IsVisible="{Binding Stories.Count}" ItemsSource="{Binding Stories}" SelectedItem="{Binding SelectedStory}" Margin="0,0,0,0" Grid.Row="0"
+			AbsoluteLayout.LayoutBounds="0, 0, 1, 1"
+            AbsoluteLayout.LayoutFlags="All">
+      <ListView.ItemTemplate>
+        <DataTemplate>
+          <ViewCell Height="20">
+            <Label Text="{Binding Name}" TextColor="Red"></Label>
+          </ViewCell>
+        </DataTemplate>
+      </ListView.ItemTemplate>
+    </ListView>
+    <Button Text="Create" Command="{Binding CreateButtonClick}" Grid.Row="0"></Button>
+
+    <StackLayout Orientation="Horizontal" Grid.Row="1">
+      
+      <Button Text="Read/Edit" IsVisible="{Binding ReadButtonVisible}" Command="{Binding ReadButtonClick}"></Button>
+      <Button Text="Delete" IsVisible="{Binding DeleteButtonVisible}" Command="{Binding DeleteButtonClick}"></Button>
+    </StackLayout>
+  </Grid>
+
+  
+</ContentPage>

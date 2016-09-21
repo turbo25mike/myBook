@@ -1,0 +1,76 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:DrawIt;assembly=DrawIt"
+             x:Class="DrawIt.StoryBoardEditor">
+  <ContentPage.Resources>
+    <ResourceDictionary>
+      <local:ColorConverter x:Key="ColorConverter"></local:ColorConverter>
+    </ResourceDictionary>
+  </ContentPage.Resources>
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="*" />
+      <RowDefinition Height="40" />
+    </Grid.RowDefinitions>
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition Width="30" />
+      <ColumnDefinition Width="*" />
+      <ColumnDefinition Width="40" />
+    </Grid.ColumnDefinitions>
+
+    <StackLayout Orientation="Vertical" Grid.Row="0" Grid.Column="0">
+      <Button x:Name="BucketBtn" Text="B"></Button>
+      <Button x:Name="BrushBtn" Text="BR"></Button>
+      <Button x:Name="PenBtn" Text="Pn"></Button>
+      <Button x:Name="ColorBtn" Text="C" BackgroundColor="{Binding SelectedColor, Converter={StaticResource ColorConverter}}"></Button>
+    </StackLayout>
+
+    <AbsoluteLayout Grid.Row="0" Grid.Column="1" x:Name="Layers" BackgroundColor="White" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand"></AbsoluteLayout>
+
+    <Grid x:Name="BrushSettingsContainer" Grid.Row="0" Grid.Column="1" IsVisible="False">
+      <Slider Value="{Binding Source={x:Static local:ToolManager.Instance}, Path=BrushSize}" Minimum="0" Maximum="200" />
+      <Slider Value="{Binding Source={x:Static local:ToolManager.Instance}, Path=BlurRadius}" Minimum="0" Maximum="1000" />
+      <Slider Value="{Binding Source={x:Static local:ToolManager.Instance}, Path=Alpha}" Minimum="0" Maximum="100" />
+    </Grid>
+
+    <ListView Margin="0,20,0,0" ItemSource="{x:Static local:Constants.Colors}" IsVisible="{Binding ColorPalletteIsVisible}" AbsoluteLayout.LayoutBounds="0, 0, 1, 1"
+            AbsoluteLayout.LayoutFlags="All" BackgroundColor="Black" Grid.Row="0" Grid.Column="1">
+      <ListView.ItemTemplate>
+        <DataTemplate>
+          <ViewCell>
+            <Label Text="{Binding Key}" BackgroundColor="{Binding Value, Converter={StaticResource ColorConverter}}"></Label>
+          </ViewCell>
+        </DataTemplate>
+      </ListView.ItemTemplate>
+    </ListView>
+
+    <Grid Grid.Row="0" Grid.Column="2" BackgroundColor="White" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
+      <Grid.RowDefinitions>
+        <RowDefinition Height="*" />
+        <RowDefinition Height="50" />
+      </Grid.RowDefinitions>
+      <ListView ItemSource="{Binding CurrentStoryBoard.Children}" Margin="0,0,0,0" Grid.Row="0"
+        AbsoluteLayout.LayoutBounds="0, 0, 1, 1"
+              AbsoluteLayout.LayoutFlags="All" BackgroundColor="White">
+        <ListView.ItemTemplate>
+          <DataTemplate>
+            <ViewCell Height="20">
+              <Frame OutlineColor="Black" BackgroundColor="Gray">
+                <Label Text="{Binding Status}" TextColor="Black"></Label>
+              </Frame>
+            </ViewCell>
+          </DataTemplate>
+        </ListView.ItemTemplate>
+      </ListView>
+      <Button Command="{Binding AddLayerClick}" Text="+" Grid.Row="1"></Button>
+    </Grid>
+
+    <StackLayout Orientation="Horizontal" Grid.Row="1" Grid.ColumnSpan="2">
+      <Button Command="{Binding PlayStopClick}" Text="{Binding PlayStopBtnText}"></Button>
+      <Button Commmand="{Binding RecordClick}" IsEnabled="{Binding RecordIsEnabled}" Text="Record"></Button>
+    </StackLayout>
+  </Grid>
+
+
+</ContentPage>
