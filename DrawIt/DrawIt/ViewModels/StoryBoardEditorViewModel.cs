@@ -3,16 +3,103 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text;
 using System.Linq;
+using MonoTouch.CoreGraphics;
 using Xamarin.Forms;
 
 namespace DrawIt
 {
     public class StoryBoardEditorViewModel : ViewModelBase
     {
-        private KarokeMachine AudioPlayer;
-        private StoryBoard CurrentStoryBoard;
+        public StoryBoardEditorViewModel(StoryBoard selectedStoryID)
+        {
+            _AudioPlayer = new KarokeMachine(selectedStoryID, CurrentStoryBoard.PageNumber);
+            _AudioPlayer.Stopped += (s, e) => {
+                RecordIsEnabled = true;
+                PlayStopBtnText = "Play";
+            };
 
-        private KeyValuePair<string, string> _SelectedColor;
+            PlayStopClick = new Command(() => PlayStopAction());
+            RecordClick = new Command(() => RecordAction());
+            ColorClick = new Command(() => { ColorPalletteIsVisible = (!ColorPalletteIsVisible); });
+            BrushClick = new Command(() => { ToolManager.Instance.Tool = ToolType.Brush; });
+            BucketClick = new Command(() => { ToolManager.Instance.Tool = ToolType.Bucket; });
+            PenClick = new Command(() => { ToolManager.Instance.Tool = ToolType.Pen; });
+            AddLayerClick = new Command(() => { CurrentStoryBoard.AddLayer(); });
+            
+            //BrushSlider.ValueChanged += (s, e) => { ToolManager.Instance.BrushSize = e.NewValue; };
+            //AlphaSlider.ValueChanged += (s, e) => { ToolManager.Instance.Alpha = (int)e.NewValue; };
+            //BlurSlider.ValueChanged += (s, e) => { ToolManager.Instance.BlurRadius = e.NewValue; };
+        }
+
+        private void PlayStopAction()
+        {
+            if (_AudioPlayer.IsStopped)
+            {
+                RecordIsEnabled = false;
+                _AudioPlayer.Play();
+                PlayStopBtnText = "Stop";
+            }
+            else
+            {
+                RecordIsEnabled = true;
+                _AudioPlayer.Stop();
+                PlayStopBtnText = "Play";
+            }
+        }
+
+        private void RecordAction()
+        {
+            if (_AudioPlayer.IsStopped)
+            {
+                PlayStopBtnText = "Stop";
+                RecordIsEnabled = false;
+                _AudioPlayer.Record();
+            }
+        }
+
+
+        private void LayersViewer_ItemSelected(object sender, SelectedItemChangedEventArgs e)
+        {
+            if (e.SelectedItem != null)
+            {
+                ImageLayer currentLayer = e.SelectedItem as ImageLayer;
+                CurrentStoryBoard.SetLayerInFocus(currentLayer);
+            }
+        }
+
+        #region Members
+
+        private KarokeMachine _AudioPlayer;
+
+        public Command PlayStopClick { get; private set; }
+        public Command RecordClick { get; private set; }
+        public Command ColorClick { get; private set; }
+        public Command BrushClick { get; private set; }
+        public Command BucketClick { get; private set; }
+        public Command PenClick { get; private set; }
+        public Command AddLayerClick { get; private set; }
+
+
+        private StoryBoard _CurrentStoryBoard;
+        public StoryBoard CurrentStoryBoard
+        {
+            get
+            {
+                return _CurrentStoryBoard;
+            }
+            set
+            {
+                if (!_CurrentStoryBoard.Equals(value))
+                {
+                    _CurrentStoryBoard = value;
+                    OnPropertyChanged(nameof(CurrentStoryBoard));
+                }
+            }
+        }
+
+
+
+        private KeyValuePair<string, string> _SelectedColor = new KeyValuePair<string, string>("Black", "FF000000");
         public KeyValuePair<string, string> SelectedColor
         {
             get
@@ -23,11 +110,15 @@ namespace DrawIt
             {
                 if (!_SelectedColor.Equals(value))
                 {
+                    ToolManager.Instance.ForegroundColor = value.Value;
                     _SelectedColor = value;
+                    ColorPalletteIsVisible = false;
                     OnPropertyChanged(nameof(SelectedColor));
                 }
             }
         }
+
+
 
         private string _PlayStopBtnText;
         public string PlayStopBtnText
@@ -64,32 +155,6 @@ namespace DrawIt
             }
         }
 
-        private void PlayStopAction()
-        {
-            if (AudioPlayer.IsStopped)
-            {
-                RecordIsEnabled = false;
-                AudioPlayer.Play();
-                PlayStopBtnText = "Stop";
-            }
-            else
-            {
-                RecordIsEnabled = true;
-                AudioPlayer.Stop();
-                PlayStopBtnText = "Play";
-            }
-        }
-
-        private void RecordAction()
-        {
-            if (AudioPlayer.IsStopped)
-            {
-                PlayStopBtnText = "Stop";
-                RecordIsEnabled = false;
-                AudioPlayer.Record();
-            }
-        }
-
 
         private bool _ColorPalletteIsVisible;
         public bool ColorPalletteIsVisible
@@ -107,59 +172,6 @@ namespace DrawIt
                 }
             }
         }
-
-        public Command PlayStopClick { get; private set; }
-        public Command RecordClick { get; private set; }
-        public Command ColorClick { get; private set; }
-        public Command BrushClick { get; private set; }
-        public Command BucketClick { get; private set; }
-        public Command PenClick { get; private set; }
-        public Command AddLayerClick { get; private set; }
-
-        public StoryBoardEditorViewModel(Story selectedStory)
-        {
-            AudioPlayer = new KarokeMachine(selectedStory.ID, CurrentStoryBoard.PageNumber);
-            AudioPlayer.Stopped += (s,e) => {
-                RecordIsEnabled = true;
-                PlayStopBtnText = "Play";
-            };
-
-            SelectedColor = new KeyValuePair<string, string>("Black", "FF000000");
-            CurrentStoryBoard = selectedStory.StoryBoards[0];
-
-            PlayStopClick = new Command(() => PlayStopAction());
-            RecordClick = new Command(() => RecordAction());
-            ColorClick = new Command(() => { ColorPalletteIsVisible = (!ColorPalletteIsVisible); });
-            BrushClick = new Command(() => { ToolManager.Instance.Tool = ToolType.Brush; });
-            BucketClick = new Command(() => { ToolManager.Instance.Tool = ToolType.Bucket; });
-            PenClick = new Command(() => { ToolManager.Instance.Tool = ToolType.Pen; });
-            AddLayerClick = new Command(() => { CurrentStoryBoard.AddLayer(); });
-            
-            AbsoluteLayout.SetLayoutBounds(CurrentStoryBoard, new Rectangle(0, 0, 1, 1));
-            AbsoluteLayout.SetLayoutFlags(CurrentStoryBoard, AbsoluteLayoutFlags.All);
-            Layers.Children.Add(CurrentStoryBoard);
-
-
-            LayersViewer.ItemSelected += LayersViewer_ItemSelected;
-
-            //BrushSlider.ValueChanged += (s, e) => { ToolManager.Instance.BrushSize = e.NewValue; };
-            //AlphaSlider.ValueChanged += (s, e) => { ToolManager.Instance.Alpha = (int)e.NewValue; };
-            //BlurSlider.ValueChanged += (s, e) => { ToolManager.Instance.BlurRadius = e.NewValue; };
-            ColorPallette.ItemSelected += (s, e) => {
-                ToolManager.Instance.ForegroundColor = ((KeyValuePair<string, string>)e.SelectedItem).Value;
-                SelectedColor = (KeyValuePair<string, string>)e.SelectedItem;
-                ColorPallette.IsVisible = false;
-            };
-        }
-
-
-        private void LayersViewer_ItemSelected(object sender, SelectedItemChangedEventArgs e)
-        {
-            if (e.SelectedItem != null)
-            {
-                ImageLayer currentLayer = e.SelectedItem as ImageLayer;
-                CurrentStoryBoard.SetLayerInFocus(currentLayer);
-            }
-        }
+        #endregion
     }
 }

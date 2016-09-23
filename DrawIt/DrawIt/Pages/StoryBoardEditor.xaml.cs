@@ -7,7 +7,11 @@ namespace DrawIt
         public StoryBoardEditor(Story selectedStory)
         {
             InitializeComponent();
-            BindingContext = new StoryBoardEditorViewModel(selectedStory);
+            BindingContext = new StoryBoardEditorViewModel(selectedStory, 0);
+
+            AbsoluteLayout.SetLayoutBounds(selectedStory.StoryBoards[0], new Rectangle(0, 0, 1, 1));
+            AbsoluteLayout.SetLayoutFlags(selectedStory.StoryBoards[0], AbsoluteLayoutFlags.All);
+            Layers.Children.Add(selectedStory.StoryBoards[0]);
         }
     }
 }
