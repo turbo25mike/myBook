@@ -26,7 +26,7 @@
       <Button x:Name="ColorBtn" Text="C" BackgroundColor="{Binding SelectedColor, Converter={StaticResource ColorConverter}}"></Button>
     </StackLayout>
 
-    <AbsoluteLayout Grid.Row="0" Grid.Column="1" x:Name="Layers" BackgroundColor="White" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand"></AbsoluteLayout>
+    <AbsoluteLayout x:Name="StoryBoardContainer" Grid.Row="0" Grid.Column="1" x:Name="Layers" BackgroundColor="White" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand"></AbsoluteLayout>
 
     <Grid x:Name="BrushSettingsContainer" Grid.Row="0" Grid.Column="1" IsVisible="False">
       <Slider Value="{Binding Source={x:Static local:ToolManager.Instance}, Path=BrushSize}" Minimum="0" Maximum="200" />
@@ -34,7 +34,7 @@
       <Slider Value="{Binding Source={x:Static local:ToolManager.Instance}, Path=Alpha}" Minimum="0" Maximum="100" />
     </Grid>
 
-    <ListView Margin="0,20,0,0" ItemSource="{x:Static local:Constants.Colors}" IsVisible="{Binding ColorPalletteIsVisible}" AbsoluteLayout.LayoutBounds="0, 0, 1, 1"
+    <ListView Margin="0,20,0,0" SelectedItem="{Binding SelectedColor}" ItemsSource="{x:Static local:Constants.Colors}" IsVisible="{Binding ColorPalletteIsVisible}" AbsoluteLayout.LayoutBounds="0, 0, 1, 1"
             AbsoluteLayout.LayoutFlags="All" BackgroundColor="Black" Grid.Row="0" Grid.Column="1">
       <ListView.ItemTemplate>
         <DataTemplate>
@@ -50,7 +50,7 @@
         <RowDefinition Height="*" />
         <RowDefinition Height="50" />
       </Grid.RowDefinitions>
-      <ListView ItemSource="{Binding CurrentStoryBoard.Children}" Margin="0,0,0,0" Grid.Row="0"
+      <ListView ItemsSource="{Binding CurrentStoryBoard.Children}" Margin="0,0,0,0" Grid.Row="0"
         AbsoluteLayout.LayoutBounds="0, 0, 1, 1"
               AbsoluteLayout.LayoutFlags="All" BackgroundColor="White">
         <ListView.ItemTemplate>
@@ -68,7 +68,7 @@
 
     <StackLayout Orientation="Horizontal" Grid.Row="1" Grid.ColumnSpan="2">
       <Button Command="{Binding PlayStopClick}" Text="{Binding PlayStopBtnText}"></Button>
-      <Button Commmand="{Binding RecordClick}" IsEnabled="{Binding RecordIsEnabled}" Text="Record"></Button>
+      <Button Command="{Binding RecordClick}" IsEnabled="{Binding RecordIsEnabled}" Text="Record"></Button>
     </StackLayout>
   </Grid>
 
