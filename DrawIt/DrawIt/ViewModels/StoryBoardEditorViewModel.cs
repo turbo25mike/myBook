@@ -10,9 +10,11 @@ namespace DrawIt
 {
     public class StoryBoardEditorViewModel : ViewModelBase
     {
-        public StoryBoardEditorViewModel(StoryBoard selectedStoryID)
+        public StoryBoardEditorViewModel(Story selectedStory, int storyBoardID)
         {
-            _AudioPlayer = new KarokeMachine(selectedStoryID, CurrentStoryBoard.PageNumber);
+            CurrentStoryBoard = selectedStory.StoryBoards[storyBoardID];
+
+            _AudioPlayer = new KarokeMachine(selectedStory.ID, CurrentStoryBoard.PageNumber);
             _AudioPlayer.Stopped += (s, e) => {
                 RecordIsEnabled = true;
                 PlayStopBtnText = "Play";
