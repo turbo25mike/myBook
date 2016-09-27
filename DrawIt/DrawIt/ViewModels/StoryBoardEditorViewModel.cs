@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text;
 using System.Linq;
-using MonoTouch.CoreGraphics;
 using Xamarin.Forms;
 
 namespace DrawIt

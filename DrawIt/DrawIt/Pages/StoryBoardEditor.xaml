@@ -26,7 +26,7 @@
       <Button x:Name="ColorBtn" Text="C" BackgroundColor="{Binding SelectedColor, Converter={StaticResource ColorConverter}}"></Button>
     </StackLayout>
 
-    <AbsoluteLayout x:Name="StoryBoardContainer" Grid.Row="0" Grid.Column="1" x:Name="Layers" BackgroundColor="White" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand"></AbsoluteLayout>
+    <AbsoluteLayout x:Name="StoryBoardContainer" Grid.Row="0" Grid.Column="1" BackgroundColor="White" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand"></AbsoluteLayout>
 
     <Grid x:Name="BrushSettingsContainer" Grid.Row="0" Grid.Column="1" IsVisible="False">
       <Slider Value="{Binding Source={x:Static local:ToolManager.Instance}, Path=BrushSize}" Minimum="0" Maximum="200" />
@@ -66,7 +66,7 @@
       <Button Command="{Binding AddLayerClick}" Text="+" Grid.Row="1"></Button>
     </Grid>
 
-    <StackLayout Orientation="Horizontal" Grid.Row="1" Grid.ColumnSpan="2">
+    <StackLayout Orientation="Horizontal" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">
       <Button Command="{Binding PlayStopClick}" Text="{Binding PlayStopBtnText}"></Button>
       <Button Command="{Binding RecordClick}" IsEnabled="{Binding RecordIsEnabled}" Text="Record"></Button>
     </StackLayout>

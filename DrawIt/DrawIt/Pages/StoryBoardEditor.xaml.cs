@@ -11,7 +11,7 @@ namespace DrawIt
 
             AbsoluteLayout.SetLayoutBounds(selectedStory.StoryBoards[0], new Rectangle(0, 0, 1, 1));
             AbsoluteLayout.SetLayoutFlags(selectedStory.StoryBoards[0], AbsoluteLayoutFlags.All);
-            Layers.Children.Add(selectedStory.StoryBoards[0]);
+            StoryBoardContainer.Children.Add(selectedStory.StoryBoards[0]);
         }
     }
 }
