@@ -5,9 +5,10 @@ namespace DrawIt
 {
 	public class App : Application
     {
+        
         public App()
         {
-            MainPage = new NavigationPage(new StoryManager()); 
+            Bootstrapper.Run();
 		}
 
         protected override void OnStart()
