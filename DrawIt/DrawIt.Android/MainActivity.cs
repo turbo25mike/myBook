@@ -1,5 +1,7 @@
 ﻿using Android.App;
 using Android.OS;
+using Microsoft.Practices.Unity;
+using Prism.Unity;
 using Xamarin.Forms.Platform.Android;
 
 namespace DrawIt
@@ -13,8 +15,15 @@ namespace DrawIt
 
             global::Xamarin.Forms.Forms.Init(this, bundle);
 
-            LoadApplication(new DrawIt.App());
+            LoadApplication(new App(new AndroidInitializer()));
         }
-	}
+    }
+    public class AndroidInitializer : IPlatformInitializer
+    {
+        public void RegisterTypes(IUnityContainer container)
+        {
+
+        }
+    }
 }
 

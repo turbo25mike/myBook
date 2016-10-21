@@ -2,9 +2,9 @@
 
 namespace DrawIt
 {
-    public partial class StoryManagerView : ContentPage
+    public partial class TestView : ContentPage
     {
-        public StoryManagerView()
+        public TestView()
         {
             InitializeComponent();
         }

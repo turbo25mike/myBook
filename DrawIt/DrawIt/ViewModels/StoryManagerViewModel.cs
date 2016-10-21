@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using Prism.Mvvm;
+using Prism.Navigation;
 using System.Text;
 using Xamarin.Forms;
 
 namespace DrawIt
 {
-    public class StoryManagerViewModel : ViewModelBase
+    public class StoryManagerViewModel : BindableBase, INavigationAware
     {
         public Command ReadButtonClick { get; private set; }
         public Command DeleteButtonClick { get; private set; }
@@ -97,17 +99,27 @@ namespace DrawIt
 
         private void CreateButtonAction()
         {
-            App.Current.MainPage = new StoryBoardEditor(new Story());
+            //App.Current.MainPage = new StoryBoardEditor(new Story());
         }
 
         private void ReadButtonAction()
         {
-            App.Current.MainPage = new StoryBoardEditor(SelectedStory);
+            //App.Current.MainPage = new StoryBoardEditor(SelectedStory);
         }
 
         private void DeleteButtonAction()
         {
             throw new NotImplementedException();
+        }
+
+        public void OnNavigatedFrom(NavigationParameters parameters)
+        {
+
+        }
+
+        public void OnNavigatedTo(NavigationParameters parameters)
+        {
+            
         }
     }
 }

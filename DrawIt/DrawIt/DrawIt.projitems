@@ -9,11 +9,12 @@
     <Import_RootNamespace>DrawIt</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)App.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Bootstrapper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Constants.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\ToolType.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)AppModule.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\TestViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Views\StoryBoardEditor.xaml.cs">
       <DependentUpon>StoryBoardEditor.xaml</DependentUpon>
     </Compile>
@@ -29,9 +30,18 @@
     <Compile Include="$(MSBuildThisFileDirectory)Utilities\ViewModelBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\StoryBoardEditorViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\StoryManagerViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Views\TestView.xaml.cs" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)App.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Views\StoryBoardEditor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Views\TestView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
