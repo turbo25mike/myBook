@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Prism.Mvvm;
 using Xamarin.Forms;
 
 namespace DrawIt
 {
-    public class ToolManager : ViewModelBase
+    public class ToolManager : BindableBase
     {
 
 

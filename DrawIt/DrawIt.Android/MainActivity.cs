@@ -2,7 +2,6 @@
 using Android.OS;
 using Microsoft.Practices.Unity;
 using Prism.Unity;
-using Xamarin.Forms.Platform.Android;
 
 namespace DrawIt
 {

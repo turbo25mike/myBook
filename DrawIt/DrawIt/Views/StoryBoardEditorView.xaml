@@ -2,7 +2,7 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:DrawIt;assembly=DrawIt"
-             x:Class="DrawIt.StoryBoardEditor">
+             x:Class="DrawIt.StoryBoardEditorView">
   <ContentPage.Resources>
     <ResourceDictionary>
       <local:ColorConverter x:Key="ColorConverter"></local:ColorConverter>
@@ -20,19 +20,25 @@
     </Grid.ColumnDefinitions>
 
     <StackLayout Orientation="Vertical" Grid.Row="0" Grid.Column="0">
-      <Button x:Name="BucketBtn" Text="B"></Button>
-      <Button x:Name="BrushBtn" Text="BR"></Button>
-      <Button x:Name="PenBtn" Text="Pn"></Button>
-      <Button x:Name="ColorBtn" Text="C" BackgroundColor="{Binding SelectedColor, Converter={StaticResource ColorConverter}}"></Button>
+      <Button Text="B" Command="{Binding ToolClick}" CommandParameter="Bucket"></Button>
+      <Button Text="BR" Command="{Binding ToolClick}" CommandParameter="Brush"></Button>
+      <Button Text="Pn" Command="{Binding ToolClick}" CommandParameter="Pen"></Button>
+      <Button Text="C" Command="{Binding ColorClick}" BackgroundColor="{Binding SelectedColor.Value, Converter={StaticResource ColorConverter}}"></Button>
     </StackLayout>
 
-    <AbsoluteLayout x:Name="StoryBoardContainer" Grid.Row="0" Grid.Column="1" BackgroundColor="White" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand"></AbsoluteLayout>
+    <AbsoluteLayout Grid.Row="0" Grid.Column="1" BackgroundColor="White" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
+      <local:StoryBoardLayout Layers="{Binding CurrentStoryBoard.Layers}" SelectedLayer="{Binding CurrentStoryBoard.SelectedLayer}" />
+    </AbsoluteLayout>
 
-    <Grid x:Name="BrushSettingsContainer" Grid.Row="0" Grid.Column="1" IsVisible="False">
+    <StackLayout Orientation="Vertical" IsVisible="{Binding BrushSettingsIsVisible}" Grid.Row="0" Grid.Column="1" HeightRequest="200" BackgroundColor="White">
+      <Button Text="x" Command="{Binding HideBrushSettings}" HorizontalOptions="End" WidthRequest="40" HeightRequest="40"></Button>
+      <Label Text="Tool Size" TextColor="Black" />
       <Slider Value="{Binding Source={x:Static local:ToolManager.Instance}, Path=BrushSize}" Minimum="0" Maximum="200" />
+      <Label Text="Blur Radius" TextColor="Black" />
       <Slider Value="{Binding Source={x:Static local:ToolManager.Instance}, Path=BlurRadius}" Minimum="0" Maximum="1000" />
+      <Label Text="Alpha" />
       <Slider Value="{Binding Source={x:Static local:ToolManager.Instance}, Path=Alpha}" Minimum="0" Maximum="100" />
-    </Grid>
+    </StackLayout>
 
     <ListView Margin="0,20,0,0" SelectedItem="{Binding SelectedColor}" ItemsSource="{x:Static local:Constants.Colors}" IsVisible="{Binding ColorPalletteIsVisible}" AbsoluteLayout.LayoutBounds="0, 0, 1, 1"
             AbsoluteLayout.LayoutFlags="All" BackgroundColor="Black" Grid.Row="0" Grid.Column="1">
@@ -50,14 +56,14 @@
         <RowDefinition Height="*" />
         <RowDefinition Height="50" />
       </Grid.RowDefinitions>
-      <ListView ItemsSource="{Binding CurrentStoryBoard.Children}" Margin="0,0,0,0" Grid.Row="0"
+      <ListView ItemsSource="{Binding CurrentStoryBoard.Layers}" SelectedItem="{Binding CurrentStoryBoard.SelectedLayer}" Margin="0,0,0,0" Grid.Row="0"
         AbsoluteLayout.LayoutBounds="0, 0, 1, 1"
               AbsoluteLayout.LayoutFlags="All" BackgroundColor="White">
         <ListView.ItemTemplate>
           <DataTemplate>
             <ViewCell Height="20">
               <Frame OutlineColor="Black" BackgroundColor="Gray">
-                <Label Text="{Binding Status}" TextColor="Black"></Label>
+                <Label Text="{Binding ID}" TextColor="Black"></Label>
               </Frame>
             </ViewCell>
           </DataTemplate>

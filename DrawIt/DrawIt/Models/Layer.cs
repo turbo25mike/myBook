@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text;
+using Prism.Mvvm;
 
 namespace DrawIt
 {
-    public class Story : ViewModelBase
+    public class Layer : BindableBase
     {
         private string _Name;
         public string Name {
@@ -34,14 +35,11 @@ namespace DrawIt
             }
         }
 
-        public ObservableCollection<StoryBoard> StoryBoards;
 
-        public Story()
+        public Layer()
         {
-            Name = "New Story";
             ID = Guid.NewGuid();
-            StoryBoards = new ObservableCollection<StoryBoard>();
-            StoryBoards.Add(new StoryBoard());
+            Name = "L: " + ID.ToString().Substring(32);
         }
     }
 }

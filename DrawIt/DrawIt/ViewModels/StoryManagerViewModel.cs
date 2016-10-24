@@ -89,22 +89,27 @@ namespace DrawIt
             }
         }
 
-        public StoryManagerViewModel()
+        public StoryManagerViewModel(INavigationService navigationService)
         {
-            ReadButtonClick = new Command(() => ReadButtonAction());
-            DeleteButtonClick = new Command(() => DeleteButtonAction());
-            CreateButtonClick = new Command(() => CreateButtonAction());
+            NavigationService = navigationService;
+            ReadButtonClick = new Command(ReadButtonAction);
+            DeleteButtonClick = new Command(DeleteButtonAction);
+            CreateButtonClick = new Command(CreateButtonAction);
             Stories.Add(new Story());
         }
 
+        public INavigationService NavigationService { get; set; }
+
         private void CreateButtonAction()
         {
-            //App.Current.MainPage = new StoryBoardEditor(new Story());
+            SelectedStory = new Story();
+            NavigationService.NavigateAsync("StoryBoardEditorView");
+            
         }
 
         private void ReadButtonAction()
         {
-            //App.Current.MainPage = new StoryBoardEditor(SelectedStory);
+            NavigationService.NavigateAsync("StoryManagerView");
         }
 
         private void DeleteButtonAction()
@@ -114,7 +119,7 @@ namespace DrawIt
 
         public void OnNavigatedFrom(NavigationParameters parameters)
         {
-
+            parameters.Add("SelectedStory", SelectedStory);
         }
 
         public void OnNavigatedTo(NavigationParameters parameters)

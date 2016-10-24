@@ -10,38 +10,33 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Constants.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Layer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Story.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\StoryBoard.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\ToolType.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\TestViewModel.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Views\StoryBoardEditor.xaml.cs">
-      <DependentUpon>StoryBoardEditor.xaml</DependentUpon>
+    <Compile Include="$(MSBuildThisFileDirectory)Views\StoryBoardEditorView.xaml.cs">
+      <DependentUpon>StoryBoardEditorView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)ViewsComponents\ImageLayer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewsComponents\ImageWithTouch.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewsComponents\StoryBoardLayout.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utilities\Converters.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utilities\ToolManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\StoryBoardEditorViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\StoryManagerViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Views\StoryManagerView.xaml.cs">
       <DependentUpon>StoryManagerView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="$(MSBuildThisFileDirectory)Components\Story.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Components\ImageLayer.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Components\ImageWithTouch.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Components\StoryBoard.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Utilities\Converters.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Utilities\ToolManager.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Utilities\ViewModelBase.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\StoryBoardEditorViewModel.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\StoryManagerViewModel.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Views\TestView.xaml.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)App.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Views\StoryBoardEditor.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-    </EmbeddedResource>
-    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Views\TestView.xaml">
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Views\StoryBoardEditorView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>

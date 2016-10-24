@@ -9,27 +9,11 @@ namespace DrawIt
     public class ImageLayer : Frame
     {
         private ImageWithTouch DrawingImage;
-        public string Name;
-
-        public static readonly BindableProperty StatusProperty =
-            BindableProperty.Create((ImageLayer w) => w.Status, "");
-
-        public string Status
+        public Guid ID;
+        
+        public ImageLayer(Guid id)
         {
-            get
-            {
-                return (string)GetValue(StatusProperty);
-            }
-            set
-            {
-                SetValue(StatusProperty, value);
-            }
-        }
-
-        public ImageLayer(string name)
-        {
-            Name = name;
-            Status = Name + ": Active";
+            ID = id;
             DrawingImage = new ImageWithTouch
             {
                 VerticalOptions = LayoutOptions.FillAndExpand,
@@ -48,7 +32,6 @@ namespace DrawIt
 
         public void SetInFocus(bool focused)
         {
-            Status = (focused) ? "A" : "";
             DrawingImage.InFocus = focused;
         }
     }

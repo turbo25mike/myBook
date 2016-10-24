@@ -1,35 +1,45 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Text;
-using System.Linq;
+using Prism.Mvvm;
+using Prism.Navigation;
 using Xamarin.Forms;
 
 namespace DrawIt
 {
-    public class StoryBoardEditorViewModel : ViewModelBase
+    public class StoryBoardEditorViewModel : BindableBase, INavigationAware
     {
-        public StoryBoardEditorViewModel(Story selectedStory, int storyBoardID)
+        public StoryBoardEditorViewModel()
         {
-            CurrentStoryBoard = selectedStory.StoryBoards[storyBoardID];
-
-            _AudioPlayer = new KarokeMachine(selectedStory.ID, CurrentStoryBoard.PageNumber);
-            _AudioPlayer.Stopped += (s, e) => {
-                RecordIsEnabled = true;
-                PlayStopBtnText = "Play";
-            };
-
-            PlayStopClick = new Command(() => PlayStopAction());
-            RecordClick = new Command(() => RecordAction());
+            PlayStopClick = new Command(PlayStopAction);
+            RecordClick = new Command(RecordAction);
             ColorClick = new Command(() => { ColorPalletteIsVisible = (!ColorPalletteIsVisible); });
-            BrushClick = new Command(() => { ToolManager.Instance.Tool = ToolType.Brush; });
-            BucketClick = new Command(() => { ToolManager.Instance.Tool = ToolType.Bucket; });
-            PenClick = new Command(() => { ToolManager.Instance.Tool = ToolType.Pen; });
+            ToolClick = new Command(SetTool);
             AddLayerClick = new Command(() => { CurrentStoryBoard.AddLayer(); });
-            
-            //BrushSlider.ValueChanged += (s, e) => { ToolManager.Instance.BrushSize = e.NewValue; };
-            //AlphaSlider.ValueChanged += (s, e) => { ToolManager.Instance.Alpha = (int)e.NewValue; };
-            //BlurSlider.ValueChanged += (s, e) => { ToolManager.Instance.BlurRadius = e.NewValue; };
+            HideBrushSettings = new Command(() => { BrushSettingsIsVisible = false; });
+        }
+
+
+        private void SetTool(object toolName)
+        {
+            string tool = toolName as string;
+            ToolType selectedTool = ToolType.Brush;
+            switch (tool)
+            {
+                case "Brush":
+                    selectedTool = ToolType.Brush;
+                    BrushSettingsIsVisible = !BrushSettingsIsVisible;
+                    break;
+                case "Bucket":
+                    selectedTool = ToolType.Bucket;
+                    BrushSettingsIsVisible = false;
+                    break;
+                case "Pen":
+                    selectedTool = ToolType.Pen;
+                    BrushSettingsIsVisible = !BrushSettingsIsVisible;
+                    break;
+            }
+
+            ToolManager.Instance.Tool = selectedTool;
         }
 
         private void PlayStopAction()
@@ -63,22 +73,21 @@ namespace DrawIt
         {
             if (e.SelectedItem != null)
             {
-                ImageLayer currentLayer = e.SelectedItem as ImageLayer;
+                Layer currentLayer = e.SelectedItem as Layer;
                 CurrentStoryBoard.SetLayerInFocus(currentLayer);
             }
         }
 
-        #region Members
 
         private KarokeMachine _AudioPlayer;
 
         public Command PlayStopClick { get; private set; }
         public Command RecordClick { get; private set; }
         public Command ColorClick { get; private set; }
-        public Command BrushClick { get; private set; }
-        public Command BucketClick { get; private set; }
-        public Command PenClick { get; private set; }
+        public Command ToolClick { get; private set; }
         public Command AddLayerClick { get; private set; }
+        public Command HideBrushSettings { get; private set; }
+        
 
 
         private StoryBoard _CurrentStoryBoard;
@@ -90,7 +99,7 @@ namespace DrawIt
             }
             set
             {
-                if (!_CurrentStoryBoard.Equals(value))
+                if (_CurrentStoryBoard == null || !_CurrentStoryBoard.Equals(value))
                 {
                     _CurrentStoryBoard = value;
                     OnPropertyChanged(nameof(CurrentStoryBoard));
@@ -109,7 +118,7 @@ namespace DrawIt
             }
             set
             {
-                if (!_SelectedColor.Equals(value))
+                if (value.Value != null && !_SelectedColor.Equals(value))
                 {
                     ToolManager.Instance.ForegroundColor = value.Value;
                     _SelectedColor = value;
@@ -157,6 +166,24 @@ namespace DrawIt
         }
 
 
+
+        private bool _BrushSettingsIsVisible;
+        public bool BrushSettingsIsVisible
+        {
+            get
+            {
+                return _BrushSettingsIsVisible;
+            }
+            set
+            {
+                if (!_BrushSettingsIsVisible.Equals(value))
+                {
+                    _BrushSettingsIsVisible = value;
+                    OnPropertyChanged(nameof(BrushSettingsIsVisible));
+                }
+            }
+        }
+
         private bool _ColorPalletteIsVisible;
         public bool ColorPalletteIsVisible
         {
@@ -173,6 +200,33 @@ namespace DrawIt
                 }
             }
         }
-        #endregion
+
+        public void OnNavigatedFrom(NavigationParameters parameters)
+        {
+
+        }
+
+        public void OnNavigatedTo(NavigationParameters parameters)
+        {
+            var nextStory = parameters["SelectedStory"] as Story;
+            if (nextStory == null)
+                return;
+            if (_SelectedStory == null || _SelectedStory.ID != nextStory.ID)
+            {
+                _SelectedStory = nextStory;
+                CurrentStoryBoard = _SelectedStory.StoryBoards[_SelectedStoryBoardID];
+                _AudioPlayer = new KarokeMachine(_SelectedStory.ID, CurrentStoryBoard.PageNumber);
+                _AudioPlayer.Stopped += AudioPlayerStopped;
+            }
+        }
+
+        private void AudioPlayerStopped(object sender, EventArgs e)
+        {
+            RecordIsEnabled = true;
+            PlayStopBtnText = "Play";
+        }
+
+        private int _SelectedStoryBoardID = 0;
+        private Story _SelectedStory;
     }
 }

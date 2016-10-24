@@ -12,15 +12,13 @@ namespace DrawIt
         protected override void OnInitialized()
         {
             InitializeComponent();
-            //NavigationService.NavigateAsync("StoryManagerView");
-
-            NavigationService.NavigateAsync("TestView?title=Hello%20from%20Xamarin.Forms");
+            NavigationService.NavigateAsync("StoryManagerView");
         }
 
         protected override void RegisterTypes()
         {
-            Container.RegisterTypeForNavigation<TestView>();
             Container.RegisterTypeForNavigation<StoryManagerView>();
+            Container.RegisterTypeForNavigation<StoryBoardEditorView>();
         }
     }
 }
