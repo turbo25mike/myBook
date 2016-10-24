@@ -10,11 +10,11 @@ namespace DrawIt
     {
         public int PageNumber;
 
-        public ObservableCollection<Layer> Layers
+        public IEnumerable<Layer> Layers
         {
             get
             {
-                return (ObservableCollection<Layer>)GetValue(LayersProperty);
+                return (IEnumerable<Layer>)GetValue(LayersProperty);
             }
             set
             {
@@ -23,7 +23,7 @@ namespace DrawIt
         }
 
         public static readonly BindableProperty LayersProperty = 
-        BindableProperty.Create(nameof(Layers), typeof(ObservableCollection<Layer>), typeof(StoryBoardLayout), null, propertyChanged: OnLayersChanged);
+        BindableProperty.Create(nameof(Layers), typeof(IEnumerable<Layer>), typeof(StoryBoardLayout), null, propertyChanged: OnLayersChanged);
         
         public static void OnLayersChanged(BindableObject bindable, object oldValue, object newValue)
         {
