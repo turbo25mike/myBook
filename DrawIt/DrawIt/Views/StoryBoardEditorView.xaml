@@ -16,7 +16,7 @@
     <Grid.ColumnDefinitions>
       <ColumnDefinition Width="30" />
       <ColumnDefinition Width="*" />
-      <ColumnDefinition Width="40" />
+      <ColumnDefinition Width="150" />
     </Grid.ColumnDefinitions>
 
     <StackLayout Orientation="Vertical" Grid.Row="0" Grid.Column="0">
@@ -56,15 +56,23 @@
         <RowDefinition Height="*" />
         <RowDefinition Height="50" />
       </Grid.RowDefinitions>
-      <ListView ItemsSource="{Binding CurrentStoryBoard.Layers}" SelectedItem="{Binding CurrentStoryBoard.SelectedLayer}" Margin="0,0,0,0" Grid.Row="0"
+      <ListView x:Name="layersList" ItemsSource="{Binding CurrentStoryBoard.Layers}" SelectedItem="{Binding CurrentStoryBoard.SelectedLayer}" Margin="0,0,0,0" Grid.Row="0"
         AbsoluteLayout.LayoutBounds="0, 0, 1, 1"
-              AbsoluteLayout.LayoutFlags="All" BackgroundColor="White">
+              AbsoluteLayout.LayoutFlags="All">
         <ListView.ItemTemplate>
           <DataTemplate>
-            <ViewCell Height="20">
-              <Frame OutlineColor="Black" BackgroundColor="Gray">
-                <Label Text="{Binding ID}" TextColor="Black"></Label>
-              </Frame>
+            <ViewCell x:Name="PropertyCell">
+              <Grid>
+                <Grid.ColumnDefinitions>
+                  <ColumnDefinition Width="20" />
+                  <ColumnDefinition Width="*" />
+                  <ColumnDefinition Width="30" />
+                </Grid.ColumnDefinitions>
+
+                <Button Grid.Column="0" Text="e"></Button>
+                <Label Grid.Column="1" Text="{Binding Name}" TextColor="Black"></Label>
+                <Button Grid.Column="2" BindingContext="{Binding Source={x:Reference layersList}, Path=BindingContext}" Command="{Binding DeleteLayerClick}" CommandParameter="{Binding Source={x:Reference PropertyCell}, Path=BindingContext}" Text="x"></Button>
+              </Grid>
             </ViewCell>
           </DataTemplate>
         </ListView.ItemTemplate>

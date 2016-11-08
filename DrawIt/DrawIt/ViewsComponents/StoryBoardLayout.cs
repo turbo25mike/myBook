@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Text;
 using Xamarin.Forms;
 
@@ -24,34 +25,72 @@ namespace DrawIt
         }
 
         public static readonly BindableProperty LayersProperty = 
-        BindableProperty.Create(nameof(Layers), typeof(IEnumerable), typeof(StoryBoardLayout), null, propertyChanged: OnLayersChanged);
-        
+        BindableProperty.Create(nameof(Layers), typeof(IEnumerable), typeof(StoryBoardLayout), default(IEnumerable), BindingMode.TwoWay, propertyChanged: OnLayersChanged);
+
         public static void OnLayersChanged(BindableObject bindable, object oldValue, object newValue)
         {
-            if (oldValue != newValue)
+            var layout = (StoryBoardLayout)bindable;
+            var notifyCollection = newValue as INotifyCollectionChanged;
+            if (notifyCollection != null)
             {
-                var layout = bindable as StoryBoardLayout;
-                foreach (Layer layer in layout.Layers)
+                notifyCollection.CollectionChanged += (sender, args) =>
                 {
-                    bool found = false;
-                    foreach (var child in layout.Children)
+                    if (args.NewItems != null)
                     {
-                        var childLayer = child as ImageLayer;
-                        if (childLayer.ID == layer.ID)
+                        foreach (var layer in args.NewItems)
                         {
-                            found = true;
-                            break;
+                            bool found = false;
+                            foreach (var child in layout.Children)
+                            {
+                                var childLayer = child as ImageLayer;
+                                if (childLayer.ID == ((Layer)layer).ID)
+                                {
+                                    found = true;
+                                    break;
+                                }
+                            }
+
+                            if (!found)
+                            {
+                                layout.DisableLayers();
+                                var newLayer = new ImageLayer(((Layer)layer).ID);
+                                layout.Children.Add(newLayer);
+                                newLayer.SetInFocus(true);
+                            }
                         }
                     }
-
-                    if (!found)
+                    if (args.OldItems != null)
                     {
-                        layout.DisableLayers();
-                        ImageLayer newLayer = new ImageLayer(layer.ID);
-                        layout.Children.Add(newLayer);
-                        newLayer.SetInFocus(true);
+                        foreach (var oldLayer in args.OldItems)
+                        {
+                            foreach (var child in layout.Children)
+                            {
+                                var childLayer = child as ImageLayer;
+                                if (childLayer.ID == ((Layer)oldLayer).ID)
+                                {
+                                    //TODO figure what to do when the current item being deleted is the Active Layer
+                                    //if (SelectedLayer != null && SelectedLayer.ID == childLayer.ID)
+                                    //{
+                                    //    layout.DisableLayers();
+                                    //}
+
+                                    layout.Children.Remove(childLayer);
+                                    break;
+                                }
+                            }
+                        }
                     }
-                }
+                };
+            }
+
+            if (newValue == null)
+                return;
+
+            foreach (var layer in (IEnumerable)newValue)
+            {
+                var newItemLayer = new ImageLayer(((Layer)layer).ID);
+                layout.Children.Add(newItemLayer);
+                newItemLayer.SetInFocus(true);
             }
         }
 

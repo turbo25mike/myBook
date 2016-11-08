@@ -46,15 +46,5 @@ namespace DrawIt
         {
             Layers = new ObservableCollection<Layer> {new Layer()};
         }
-
-        public void SetLayerInFocus(Layer layer)
-        {
-            SelectedLayer = layer;
-        }
-
-        public void AddLayer()
-        {
-            Layers.Add(new Layer());
-        }
     }
 }

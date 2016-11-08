@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
 using Prism.Mvvm;
 using Prism.Navigation;
 using Xamarin.Forms;
@@ -14,10 +16,19 @@ namespace DrawIt
             RecordClick = new Command(RecordAction);
             ColorClick = new Command(() => { ColorPalletteIsVisible = (!ColorPalletteIsVisible); });
             ToolClick = new Command(SetTool);
-            AddLayerClick = new Command(() => { CurrentStoryBoard.AddLayer(); });
+            AddLayerClick = new Command(() => { CurrentStoryBoard.Layers.Add(new Layer()); });
+            DeleteLayerClick = new Command(DeleteLayerAction);
             HideBrushSettings = new Command(() => { BrushSettingsIsVisible = false; });
         }
 
+        private void DeleteLayerAction(object selectedLayer)
+        {
+            var layer = selectedLayer as Layer;
+            if (layer != null)
+            {
+                CurrentStoryBoard.Layers.Remove(layer);
+            }
+        }
 
         private void SetTool(object toolName)
         {
@@ -68,17 +79,6 @@ namespace DrawIt
             }
         }
 
-
-        private void LayersViewer_ItemSelected(object sender, SelectedItemChangedEventArgs e)
-        {
-            if (e.SelectedItem != null)
-            {
-                Layer currentLayer = e.SelectedItem as Layer;
-                CurrentStoryBoard.SetLayerInFocus(currentLayer);
-            }
-        }
-
-
         private KarokeMachine _AudioPlayer;
 
         public Command PlayStopClick { get; private set; }
@@ -86,6 +86,7 @@ namespace DrawIt
         public Command ColorClick { get; private set; }
         public Command ToolClick { get; private set; }
         public Command AddLayerClick { get; private set; }
+        public Command DeleteLayerClick { get; private set; }
         public Command HideBrushSettings { get; private set; }
 
 
@@ -107,8 +108,6 @@ namespace DrawIt
             }
         }
 
-
-
         private KeyValuePair<string, string> _SelectedColor = new KeyValuePair<string, string>("Black", "FF000000");
         public KeyValuePair<string, string> SelectedColor
         {
@@ -128,8 +127,6 @@ namespace DrawIt
             }
         }
 
-
-
         private string _PlayStopBtnText;
         public string PlayStopBtnText
         {
@@ -147,7 +144,6 @@ namespace DrawIt
             }
         }
 
-
         private bool _RecordIsEnabled;
         public bool RecordIsEnabled
         {
@@ -164,8 +160,6 @@ namespace DrawIt
                 }
             }
         }
-
-
 
         private bool _BrushSettingsIsVisible;
         public bool BrushSettingsIsVisible
