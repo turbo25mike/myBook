@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text;
@@ -9,12 +10,12 @@ namespace DrawIt
     public class StoryBoardLayout : AbsoluteLayout
     {
         public int PageNumber;
-
-        public IEnumerable<Layer> Layers
+        
+        public IEnumerable Layers
         {
             get
             {
-                return (IEnumerable<Layer>)GetValue(LayersProperty);
+                return (IEnumerable)GetValue(LayersProperty);
             }
             set
             {
@@ -23,7 +24,7 @@ namespace DrawIt
         }
 
         public static readonly BindableProperty LayersProperty = 
-        BindableProperty.Create(nameof(Layers), typeof(IEnumerable<Layer>), typeof(StoryBoardLayout), null, propertyChanged: OnLayersChanged);
+        BindableProperty.Create(nameof(Layers), typeof(IEnumerable), typeof(StoryBoardLayout), null, propertyChanged: OnLayersChanged);
         
         public static void OnLayersChanged(BindableObject bindable, object oldValue, object newValue)
         {

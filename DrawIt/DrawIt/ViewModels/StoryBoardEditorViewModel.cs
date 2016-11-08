@@ -87,7 +87,7 @@ namespace DrawIt
         public Command ToolClick { get; private set; }
         public Command AddLayerClick { get; private set; }
         public Command HideBrushSettings { get; private set; }
-        
+
 
 
         private StoryBoard _CurrentStoryBoard;
